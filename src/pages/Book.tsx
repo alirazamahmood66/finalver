@@ -366,7 +366,7 @@ export default function BookPage() {
                         <Search className="w-4 h-4 text-muted-foreground" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0 bg-card border-border" align="start">
+                    <PopoverContent className="w-[280px] p-0 bg-card border-border" align="start" sideOffset={4}>
                       <div className="p-2 border-b border-border">
                         <Input
                           placeholder="Search states..."
@@ -415,7 +415,7 @@ export default function BookPage() {
                         <Search className="w-4 h-4 text-muted-foreground" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0 bg-card border-border" align="start">
+                    <PopoverContent className="w-[280px] p-0 bg-card border-border" align="start" sideOffset={4}>
                       <div className="p-2 border-b border-border">
                         <Input
                           placeholder="Search cities..."
