@@ -1,24 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 
-interface CursorPosition {
-  x: number;
-  y: number;
-}
-
-interface RippleParticle extends CursorPosition {
-  id: number;
-  createdAt: number;
-}
-
 export default function CustomCursor() {
-  const [cursorPos, setCursorPos] = useState<CursorPosition>({ x: 0, y: 0 });
-  const [ripples, setRipples] = useState<RippleParticle[]>([]);
   const [isDesktop, setIsDesktop] = useState(true);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
-  const rippleCounterRef = useRef(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check if device is desktop (not mobile/tablet)
     const checkIsDesktop = () => {
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
       setIsDesktop(!isMobile);
@@ -26,91 +14,93 @@ export default function CustomCursor() {
 
     checkIsDesktop();
     window.addEventListener('resize', checkIsDesktop);
-
     return () => window.removeEventListener('resize', checkIsDesktop);
   }, []);
 
   useEffect(() => {
     if (!isDesktop) return;
 
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      // Update dot position immediately (no lag)
+      if (dotRef.current) {
+        dotRef.current.style.left = `${mouseX}px`;
+        dotRef.current.style.top = `${mouseY}px`;
+      }
+    };
 
-      if (cursorDotRef.current) {
-        cursorDotRef.current.style.transform = `translate(${e.clientX - 12}px, ${e.clientY - 12}px)`;
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isClickable = target.matches('a, button, input, textarea, select, [role="button"], [data-clickable]') ||
+        target.closest('a, button, input, textarea, select, [role="button"], [data-clickable]');
+      setIsHovering(!!isClickable);
+    };
+
+    // Smooth trailing animation for outer ring
+    const animate = () => {
+      const ease = 0.15;
+      cursorX += (mouseX - cursorX) * ease;
+      cursorY += (mouseY - cursorY) * ease;
+
+      if (cursorRef.current) {
+        cursorRef.current.style.left = `${cursorX}px`;
+        cursorRef.current.style.top = `${cursorY}px`;
       }
 
-      // Create ripple every 50ms on movement
-      if (rippleCounterRef.current % 3 === 0) {
-        const newRipple: RippleParticle = {
-          x: e.clientX,
-          y: e.clientY,
-          id: rippleCounterRef.current,
-          createdAt: Date.now(),
-        };
-        setRipples((prev) => [...prev, newRipple]);
-
-        // Remove ripples after animation completes
-        setTimeout(() => {
-          setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
-        }, 1200);
-      }
-      rippleCounterRef.current++;
+      requestAnimationFrame(animate);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    const animationId = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+      cancelAnimationFrame(animationId);
+    };
   }, [isDesktop]);
 
-  // Only render on desktop
   if (!isDesktop) return null;
 
   return (
     <>
-      {/* Main cursor dot */}
+      {/* Outer ring - smooth trailing */}
       <div
-        ref={cursorDotRef}
+        ref={cursorRef}
         className="fixed pointer-events-none z-[9999]"
         style={{
-          left: 0,
-          top: 0,
-          width: '28px',
-          height: '28px',
-          border: '3px solid hsl(187 71% 65%)',
+          width: isHovering ? '44px' : '32px',
+          height: isHovering ? '44px' : '32px',
+          marginLeft: isHovering ? '-22px' : '-16px',
+          marginTop: isHovering ? '-22px' : '-16px',
+          border: '2px solid hsl(187 71% 65% / 0.6)',
           borderRadius: '50%',
-          boxShadow: '0 0 0 2px hsl(187 71% 65% / 0.2), inset 0 0 8px hsl(187 71% 65% / 0.15), 0 0 12px hsl(187 71% 65% / 0.3)',
-          transition: 'none',
-          backgroundColor: 'hsl(187 71% 65% / 0.05)',
+          transition: 'width 0.2s ease, height 0.2s ease, margin 0.2s ease, border-color 0.2s ease',
+          backgroundColor: isHovering ? 'hsl(187 71% 65% / 0.1)' : 'transparent',
         }}
       />
-
-      {/* Ripple particles */}
-      {ripples.map((ripple) => {
-        const progress = (Date.now() - ripple.createdAt) / 1000;
-        const scale = 1 + progress * 3;
-        const opacity = Math.max(0, 1 - progress);
-
-        return (
-          <div
-            key={ripple.id}
-            className="fixed pointer-events-none z-[9998]"
-            style={{
-              left: ripple.x,
-              top: ripple.y,
-              width: '24px',
-              height: '24px',
-              marginLeft: '-12px',
-              marginTop: '-12px',
-              border: `2.5px solid hsl(187 71% 65% / ${0.5 * opacity})`,
-              borderRadius: '50%',
-              transform: `scale(${scale})`,
-              opacity: opacity,
-              transition: 'none',
-              boxShadow: `0 0 12px hsl(187 71% 65% / ${0.3 * opacity})`,
-            }}
-          />
-        );
-      })}
+      {/* Inner dot - follows cursor exactly */}
+      <div
+        ref={dotRef}
+        className="fixed pointer-events-none z-[9999]"
+        style={{
+          width: '6px',
+          height: '6px',
+          marginLeft: '-3px',
+          marginTop: '-3px',
+          backgroundColor: 'hsl(187 71% 65%)',
+          borderRadius: '50%',
+          boxShadow: '0 0 8px hsl(187 71% 65% / 0.8)',
+        }}
+      />
     </>
   );
 }

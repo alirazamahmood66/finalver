@@ -58,15 +58,15 @@ const guarantees = [
 
 const howItWorks = [
   { step: "01", title: "Choose Your Service", desc: "Browse our packages and select the detailing service that suits your vehicle's needs.", image: serviceSelectionImg },
-  { step: "02", title: "Book a Time Slot", desc: "Pick a convenient date and time. We offer flexible scheduling including weekends.", image: bookingAppointmentImg },
+  { step: "02", title: "Book a Time Slot", desc: "Pick a convenient date and time. We offer flexible scheduling including weekends.", image: "/images/calendar-booking.jpg" },
   { step: "03", title: "We Detail Your Car", desc: "Our expert team handles every inch of your vehicle with precision and care.", image: detailingProcessImg },
-  { step: "04", title: "Enjoy the Results", desc: "Drive away in a vehicle that looks and feels brand new, inside and out.", image: finishedResultImg },
+  { step: "04", title: "Enjoy the Results", desc: "Drive away in a vehicle that looks and feels brand new, inside and out.", image: "/images/finished-car-result.jpg" },
 ];
 
 const additionalBenefits = [
   { icon: Droplets, title: "Water-Saving Tech", desc: "Our methods use up to 80% less water than traditional car washes while delivering superior results.", image: ecoFriendlyImg },
   { icon: Gem, title: "Ceramic Protection", desc: "Long-lasting ceramic coatings that protect your paint from UV rays, bird droppings, and road contaminants.", image: ceramicCoatingImg },
-  { icon: ThumbsUp, title: "Mobile Service", desc: "Can't come to us? We come to you. Our fully equipped mobile units serve your home or office.", image: mobileDetailingImg },
+  { icon: ThumbsUp, title: "Mobile Service", desc: "Can't come to us? We come to you. Our fully equipped mobile units serve your home or office.", image: "/images/mobile-service-van.jpg" },
 ];
 
 export default function HomePage() {

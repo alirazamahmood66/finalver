@@ -14,8 +14,7 @@ import heroContact from "@/assets/hero-contact.jpg";
 const contactInfo = [
   { icon: Phone, label: "Phone", value: "(555) 123-4567", href: "tel:+15551234567", actionLabel: "Call us" },
   { icon: Mail, label: "Email", value: "support@globalintegratedsupport.com", href: "mailto:support@globalintegratedsupport.com", actionLabel: "Send email" },
-  { icon: MapPin, label: "Address", value: "123 Detail Lane, Auto City, AC 12345", href: "https://maps.google.com/?q=123+Detail+Lane+Auto+City", actionLabel: "Get directions" },
-  { icon: Clock, label: "Hours", value: "Mon-Sat: 8AM - 6PM" },
+  { icon: Clock, label: "Hours", value: "All Days: 9AM - 6PM" },
 ];
 
 const faqs = [
