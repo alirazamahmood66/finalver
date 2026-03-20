@@ -1282,11 +1282,26 @@ export default function AdminDashboard() {
             <DialogTitle className="font-display text-xl">Appointment Details</DialogTitle>
             <DialogDescription>View the complete appointment information below</DialogDescription>
           </DialogHeader>
-          {viewApt && (
-            <div className="space-y-3 text-sm">
-              {[["ID", viewApt.id], ["Customer", viewApt.fullName], ["Phone", viewApt.phone], ["Email", viewApt.email], ["Address", viewApt.address], ["Vehicle", `${viewApt.year} ${viewApt.make} ${viewApt.model}`], ["Category", viewApt.vehicleCategory], ["Service", viewApt.serviceType], ["Date", `${viewApt.date} at ${viewApt.timeSlot}`], ["Status", viewApt.status]].map(([label, val]) => (
-                <div key={label} className="flex justify-between"><span className="text-muted-foreground">{label}</span><span className="text-foreground font-medium">{val}</span></div>
-              ))}
+{viewApt && (
+  <div className="space-y-3 text-sm">
+{[
+  ["ID", viewApt.id || viewApt._id], 
+  ["Customer", viewApt.fullName], 
+  ["Phone", viewApt.phone], 
+  ["Email", viewApt.email], 
+  ["Street Address", viewApt.streetAddress || viewApt.address || "N/A"],
+  ["Apt/Unit", viewApt.aptUnit || "N/A"],
+  ["City", viewApt.city || "N/A"],
+  ["State", viewApt.state || "N/A"],
+  ["Zip Code", viewApt.zipCode || "N/A"],
+  ["Vehicle", `${viewApt.year} ${viewApt.make} ${viewApt.vehicleModel || viewApt.model}`], 
+  ["Category", viewApt.vehicleCategory], 
+  ["Service", viewApt.serviceType], 
+  ["Date", `${viewApt.date} at ${viewApt.timeSlot}`], 
+  ["Status", viewApt.status]
+].map(([label, val]) => (
+  <div key={label} className="flex justify-between"><span className="text-muted-foreground">{label}</span><span className="text-foreground font-medium text-right max-w-[60%]">{val}</span></div>
+  ))}
               
               {/* Pricing Section */}
               <div className="border-t border-border pt-3 space-y-2">

@@ -235,6 +235,7 @@ export default function BookPage() {
           city: form.city,
           state: form.state,
           zipCode: form.zipCode,
+          vehicleName: `${form.make} ${form.vehicleModel}`,
           make: form.make,
           vehicleModel: form.vehicleModel,
           year: form.year,

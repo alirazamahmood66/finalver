@@ -1,23 +1,43 @@
+export interface CouponDetail {
+  code: string;
+  discountPercentage: number;
+  discountAmount: number;
+}
+
 export interface Appointment {
   _id?: string;
   id?: string;
   fullName: string;
   phone: string;
   email: string;
-  address: string;
+  // Address fields
+  streetAddress: string;
+  aptUnit?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  // Legacy address field for backward compatibility
+  address?: string;
+  // Vehicle info - simplified to make, model, year
   vehicleName: string;
   make: string;
-  model: string;
+  vehicleModel: string;
   year: string;
+  // Legacy model field for backward compatibility
+  model?: string;
   serviceType: string;
   vehicleCategory: string;
   date: string;
   timeSlot: string;
-  promoCode: string;
+  promoCode?: string;
+  coupons?: CouponDetail[];
+  basePrice?: number;
+  totalDiscount?: number;
   discountApplied: boolean;
   totalPrice: number;
   status: "Pending" | "Confirmed" | "Completed" | "Cancelled";
   createdAt: string;
+  updatedAt?: string;
 }
 
 export const MOCK_APPOINTMENTS: Appointment[] = [
@@ -27,10 +47,13 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     fullName: "James Morrison",
     phone: "(555) 234-5678",
     email: "james@email.com",
-    address: "456 Oak Ave, Auto City",
+    streetAddress: "456 Oak Ave",
+    city: "Los Angeles",
+    state: "California",
+    zipCode: "90001",
     vehicleName: "Tesla Model 3",
     make: "Tesla",
-    model: "Model 3",
+    vehicleModel: "Model 3",
     year: "2024",
     serviceType: "Super Wax Detail",
     vehicleCategory: "Car",
@@ -38,6 +61,8 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     timeSlot: "10:00 AM",
     promoCode: "FIRST10",
     discountApplied: true,
+    basePrice: 229.99,
+    totalDiscount: 23.00,
     totalPrice: 206.99,
     status: "Confirmed",
     createdAt: "2026-02-20T10:30:00Z",
@@ -48,16 +73,19 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     fullName: "Sarah Kim",
     phone: "(555) 345-6789",
     email: "sarah@email.com",
-    address: "789 Pine St, Auto City",
+    streetAddress: "789 Pine St",
+    aptUnit: "Apt 4B",
+    city: "San Francisco",
+    state: "California",
+    zipCode: "94102",
     vehicleName: "BMW X5",
     make: "BMW",
-    model: "X5",
+    vehicleModel: "X5",
     year: "2023",
     serviceType: "Interior Only",
     vehicleCategory: "SUV",
     date: "2026-03-02",
     timeSlot: "2:00 PM",
-    promoCode: "",
     discountApplied: false,
     totalPrice: 219.99,
     status: "Pending",
@@ -69,16 +97,18 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     fullName: "Michael Rivera",
     phone: "(555) 456-7890",
     email: "michael@email.com",
-    address: "321 Elm Blvd, Auto City",
+    streetAddress: "321 Elm Blvd",
+    city: "Houston",
+    state: "Texas",
+    zipCode: "77001",
     vehicleName: "Ford Mustang",
     make: "Ford",
-    model: "Mustang",
+    vehicleModel: "Mustang",
     year: "2022",
     serviceType: "Exterior Only",
     vehicleCategory: "Car",
     date: "2026-02-28",
     timeSlot: "9:00 AM",
-    promoCode: "",
     discountApplied: false,
     totalPrice: 179.99,
     status: "Completed",
@@ -90,10 +120,14 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     fullName: "Emily Davis",
     phone: "(555) 567-8901",
     email: "emily@email.com",
-    address: "654 Maple Dr, Auto City",
+    streetAddress: "654 Maple Dr",
+    aptUnit: "Suite 200",
+    city: "Phoenix",
+    state: "Arizona",
+    zipCode: "85001",
     vehicleName: "Toyota Highlander",
     make: "Toyota",
-    model: "Highlander",
+    vehicleModel: "Highlander",
     year: "2025",
     serviceType: "Super Wax Detail",
     vehicleCategory: "CrossOver",
@@ -101,6 +135,8 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     timeSlot: "11:00 AM",
     promoCode: "FIRST10",
     discountApplied: true,
+    basePrice: 239.99,
+    totalDiscount: 24.00,
     totalPrice: 215.99,
     status: "Pending",
     createdAt: "2026-02-23T16:45:00Z",
@@ -111,16 +147,18 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     fullName: "David Lee",
     phone: "(555) 678-9012",
     email: "david@email.com",
-    address: "987 Cedar Ln, Auto City",
+    streetAddress: "987 Cedar Ln",
+    city: "Miami",
+    state: "Florida",
+    zipCode: "33101",
     vehicleName: "Chevrolet Suburban",
     make: "Chevrolet",
-    model: "Suburban",
+    vehicleModel: "Suburban",
     year: "2023",
     serviceType: "Interior Only",
     vehicleCategory: "X-Large",
     date: "2026-03-03",
     timeSlot: "3:00 PM",
-    promoCode: "",
     discountApplied: false,
     totalPrice: 239.99,
     status: "Cancelled",
@@ -132,16 +170,19 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
     fullName: "Amanda Torres",
     phone: "(555) 789-0123",
     email: "amanda@email.com",
-    address: "147 Birch Way, Auto City",
+    streetAddress: "147 Birch Way",
+    aptUnit: "Unit 12",
+    city: "New York",
+    state: "New York",
+    zipCode: "10001",
     vehicleName: "Mercedes GLE",
     make: "Mercedes-Benz",
-    model: "GLE",
+    vehicleModel: "GLE",
     year: "2024",
     serviceType: "Exterior Only",
     vehicleCategory: "SUV",
     date: "2026-03-04",
     timeSlot: "1:00 PM",
-    promoCode: "",
     discountApplied: false,
     totalPrice: 199.99,
     status: "Confirmed",
